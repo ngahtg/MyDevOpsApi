@@ -30,4 +30,4 @@ namespace MyDevOpsApi.Controllers
             .ToArray();
         }
     }
-}; 
+
