@@ -29,7 +29,7 @@ jobs:
     - name: Build project
       run: dotnet build --no-restore --configuration Release
 
-    # 5. Kiểm tra build thử Docker Image theo Dockerfile
+    # Bước 5: Kiểm tra quá trình đóng gói Docker Image
     - name: Test Docker Image Build
       run: |
-        docker build -t devops-api-test:latest -f ./MyDevOpsApi/Dockerfile .
+        docker build -t devops-api-test:latest ./MyDevOpsApi
