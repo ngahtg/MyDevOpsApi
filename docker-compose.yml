@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Service 1: Cơ sở dữ liệu SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password123!@#
+    ports:
+      - "14333:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  # Service 2: Web API của bạn
+  api:
+    build:
+      context: ./MyDevOpsApi
+      dockerfile: Dockerfile
+    container_name: devops-web-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=DevOpsDb;User Id=sa;Password=Password123!@#;TrustServerCertificate=True
+    depends_on:
+      - db
+
+volumes:
+  sql_data:

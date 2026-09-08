@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 2565447b-5916-47c6-8ed4-2f73f5fe0a50
+
+localResources:
+  specs:
+    - ../MyDevOpsApi/obj/Debug/net8.0/EndpointInfo/MyDevOpsApi.json

@@ -1,0 +1,9 @@
+## bộ lọc - tự động bỏ qua các file
+## Build results & temp files
+bin/
+obj/
+
+## Visual Studio cache & user settings
+.vs/
+*.user
+*.suo
