@@ -29,5 +29,7 @@ namespace MyDevOpsApi.Controllers
             })
             .ToArray();
         }
-    
+    }
+}
+
 
