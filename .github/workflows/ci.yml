@@ -22,13 +22,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    # Bước 3: Tải các thư viện NuGet phụ thuộc được khai báo trong dự án
+    # Bước 3: Tải thư viện phụ thuộc trực tiếp cho file .csproj
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./MyDevOpsApi/MyDevOpsApi.csproj
 
-    # Bước 4: Biên dịch code C# ở chế độ Release để rà soát lỗi cú pháp
+    # Bước 4: Biên dịch code C# trực tiếp từ file .csproj
     - name: Build project
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build ./MyDevOpsApi/MyDevOpsApi.csproj --no-restore --configuration Release
 
     # Bước 5: Đăng nhập vào Docker Hub bằng tài khoản lưu trong GitHub Secrets
     - name: Log in to Docker Hub
