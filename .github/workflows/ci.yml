@@ -1,5 +1,6 @@
-name: .NET Core CI & Docker Build
+name: .NET Core CI & Docker CD
 
+# Thiết lập điều kiện kích hoạt: chạy khi có push hoặc tạo Pull Request vào nhánh main
 on:
   push:
     branches: [ "main" ]
@@ -11,25 +12,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Kéo code về máy ảo Ubuntu của GitHub
+    # Bước 1: Kéo toàn bộ mã nguồn từ GitHub về ổ đĩa của máy ảo
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 2. Cài đặt .NET SDK 8 trên máy ảo
+    # Bước 2: Cài đặt bộ SDK .NET 8 vào máy ảo
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    # 3. Tải các gói thư viện NuGet
+    # Bước 3: Tải các thư viện NuGet phụ thuộc được khai báo trong dự án
     - name: Restore dependencies
       run: dotnet restore
 
-    # 4. Biên dịch code C# (kiểm tra lỗi build)
+    # Bước 4: Biên dịch code C# ở chế độ Release để rà soát lỗi cú pháp
     - name: Build project
       run: dotnet build --no-restore --configuration Release
 
-    # Bước 5: Kiểm tra quá trình đóng gói Docker Image
-    - name: Test Docker Image Build
-      run: |
-        docker build -t devops-api-test:latest ./MyDevOpsApi
+    # Bước 5: Đăng nhập vào Docker Hub bằng tài khoản lưu trong GitHub Secrets
+    - name: Log in to Docker Hub
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # Bước 6: Đóng gói Docker Image và tự động đẩy (Push) lên Docker Hub
+    - name: Build and Push Docker Image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: docker/build-push-action@v5
+      with:
+        context: ./MyDevOpsApi
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/mydevopsapi:latest
